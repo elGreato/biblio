@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./getWeb3";
 import Button from 'react-bootstrap/Button'
-
+import ipfs from './APIs/IPFSapi'
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { storageValue: 0, web3: null, accounts: null, contract: null, buffer: null };
 
   componentDidMount = async () => {
     try {
@@ -50,6 +50,21 @@ class App extends Component {
     this.setState({ storageValue: response });
   };
 
+  handleFileChange = async(event) => {
+    event.preventDefault();
+     //fetch the file
+     const file = event.target.files[0]
+
+     //reader converts file to a buffer
+     const reader = new window.FileReader()
+     reader.readAsArrayBuffer(file)
+     reader.onloadend = () => {
+       this.setState({ buffer: Buffer(reader.result) })
+     }
+     let result =  ipfs(file)
+     
+  }
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
@@ -69,6 +84,15 @@ class App extends Component {
          <Button variant="primary" onClick={this.runExample}>
            Check contract {this.state.storageValue}
            </Button>
+           <div class="form-group">
+                    <label for="caseFile">File input</label>
+                    <input
+                      type="file"
+                      onChange= {event => {this.handleFileChange(event)}}
+                      class="form-control-file"
+                      id="caseFile"
+                    />
+                  </div>
         <div>The stored value is: </div>
       </div>
     );
