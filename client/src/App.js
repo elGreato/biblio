@@ -290,7 +290,7 @@ class App extends Component {
             </Modal>
 
             <Modal isOpen={this.state.descriptionModal} toggle={this.toggleDescriptionModal.bind(this)}>
-              <ModalHeader toggle={this.toggleDescriptionModal.bind(this)}>The Soul of a New Machine</ModalHeader>
+              <ModalHeader toggle={this.toggleDescriptionModal.bind(this)}>Book Title</ModalHeader>
               <ModalBody>
                 <FormGroup>
                   <FormText>The description should be fetch from the blockchain
