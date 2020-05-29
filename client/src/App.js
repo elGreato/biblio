@@ -9,6 +9,8 @@ class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null, buffer: null };
 
   componentDidMount = async () => {
+
+    //I already implemented a normal web3js for you to use as an example. 
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
@@ -36,7 +38,20 @@ class App extends Component {
     }
   };
 
-  //this block will be removed later
+  //TODO: Web3 of Besu (if any)
+
+
+
+
+
+  //TODO Web3 of Quorum https://github.com/jpmorganchase/quorum.js/
+
+
+
+
+
+
+  //this block will be removed later .. this is just to test the smart contract
   runExample = async () => {
     const { accounts, contract } = this.state;
 
@@ -49,6 +64,10 @@ class App extends Component {
     // Update state with the result.
     this.setState({ storageValue: response });
   };
+
+
+
+  //Function to receive a file (pdf) from a user that we upload to IPFS
 
   handleFileChange = async(event) => {
     event.preventDefault();
@@ -65,11 +84,15 @@ class App extends Component {
      
   }
 
+
+  //Render shows the content of the page
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
+      //This is a test .. Delete Later: From here>>>>>
       <div className="App">
         <h1>Good to Go!</h1>
         <p>just initiated our project Biblio.</p>
@@ -95,6 +118,25 @@ class App extends Component {
                   </div>
         <div>The stored value is: </div>
       </div>
+      //Till here <<<<<<<<<
+
+      //TODO a simple Form to submit a book (this should call the handleFileChange function)
+
+
+      //TODO: a simple table that shows the list of books we have, with buttons to buy 
+
+
+
+
+
+      //TODO a simple menu to choose between Quorum and Besu 
+
+
+
+
+      //TODO some other data about the blockchain (Current block, amounts of blocks ....etc. we can discuss this later)
+
+
     );
   }
 }
