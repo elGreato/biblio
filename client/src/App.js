@@ -293,7 +293,7 @@ class App extends Component {
               <ModalHeader toggle={this.toggleDescriptionModal.bind(this)}>The Soul of a New Machine</ModalHeader>
               <ModalBody>
                 <FormGroup>
-                  <FormText>Tracy Kidder’s The Soul of a New Machine is one of the few must-read histories about the world of Computer Science. First published in 1981, Kidder’s classic remains one of the most highly regarded books about computers to ever hit the shelves. The Soul of a New Machine carefully recounts the drama, comedy, and excitement of the early years of computers, at the time when there was but one company making the effort to bring a new microcomputer to the mass market. Computer Science majors will also appreciate the go-for-broke approach to business that is only briefly referenced here, but has become an approach that so many high-tech companies still maintain.
+                  <FormText>The description should be fetch from the blockchain
                   </FormText>
                 </FormGroup>
               </ModalBody>
