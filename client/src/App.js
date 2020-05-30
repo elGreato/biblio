@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-//import LibraryContract from "./contracts/LibraryContract.json";
+//import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import LibraryContract from "./contracts/LibraryContract.json";
 import getWeb3 from "./getWeb3";
 //import Button from 'react-bootstrap/Button'
 //import ipfs from './APIs/IPFSapi'
@@ -14,7 +14,8 @@ import { Input, FormGroup, Label, Modal, ModalHeader, ModalBody, ModalFooter, Ta
 
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null, buffer: null };
+  //state = { storageValue: 0, web3: null, accounts: null, contract: null, buffer: null };
+  state = { accounts: null, booksCount: null, books: [], loading: true, buffer: null, web3: null, contract: null };
 
   //Input Javi --> Tutorial
   // async componentWillMount() {
@@ -68,7 +69,7 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
+/*     this.state = {
       account: '',
       booksCount: 0,
       books: [],
@@ -76,9 +77,9 @@ class App extends Component {
       buffer: null,
       web3: null,
       contract: null
-    }
+    } */
 
-    this.createBook = this.createBook.bind(this)
+    //this.createBook = this.createBook.bind(this)
     // this.purchaseBook = this.purchaseBook.bind(this)
   }
 
@@ -112,15 +113,17 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      //const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = LibraryContract.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        //SimpleStorageContract.abi,
+        LibraryContract.abi,
         deployedNetwork && deployedNetwork.address,
       );
-
+      
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance });
+      this.setState({ web3, accounts, contract: instance }, this.runExample);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -137,8 +140,71 @@ class App extends Component {
   //TODO Web3 of Quorum https://github.com/jpmorganchase/quorum.js/
 
 
-  //this block will be removed later .. this is just to test the smart contract
-  runExample = async () => {
+/*   simplestorage_render() {
+    if (!this.state.web3) {
+      return <div>Loading Web3, accounts, and contract...</div>;
+    }
+    return (
+      <div className="App">
+        <h1>Good to Go!</h1>
+        <p>Your Truffle Box is installed and ready.</p>
+        <h2>Smart Contract Example</h2>
+        <p>
+          If your contracts compiled and migrated successfully, below will show
+          a stored value of 5 (by default).
+        </p>
+        <p>
+          Try changing the value stored on <strong>line 40</strong> of App.js.
+        </p>
+        <div>The stored value is: {this.state.storageValue}</div>
+      </div>
+    );
+  } */
+
+  render3() {
+    if (!this.state.web3) {
+      return <div>Loading Web3, accounts, and contract...</div>;
+    }
+    return (
+      <div className="App">
+        <h1>Good to Go!</h1>
+        <p>Your Truffle Box is installed and ready.</p>
+        <h2>Smart Contract Example</h2>
+        <p>
+          If your contracts compiled and migrated successfully, below will show
+          a stored value of 5 (by default).
+        </p>
+        <p>
+          Try changing the value stored on <strong>line 40</strong> of App.js.
+        </p>
+        <div>The stored value is: {this.state.booksCount}</div>
+      </div>
+    );
+  }
+
+/*   render() {
+    if (!this.state.web3) {
+      return <div>Loading Web3, accounts, and contract...</div>;
+    }
+    return (
+      <div className="App">
+        <h1>Good to Go!</h1>
+        <p>Your Truffle Box is installed and ready.</p>
+        <h2>Smart Contract Example</h2>
+        <p>
+          If your contracts compiled and migrated successfully, below will show
+          a stored value of 5 (by default).
+        </p>
+        <p>
+          Try changing the value stored on <strong>line 40</strong> of App.js.
+        </p>
+        <div>The stored value is: {this.state.storageValue}</div>
+      </div>
+    );
+  } */
+
+
+/*   runExample = async () => {
     const { accounts, contract } = this.state;
 
     // Stores a given value, 5 by default.
@@ -149,6 +215,27 @@ class App extends Component {
 
     // Update state with the result.
     this.setState({ storageValue: response });
+  }; */
+
+
+  runExample = async () => {
+    const { accounts, contract } = this.state;
+/*
+    // Stores a given value, 5 by default.
+    await contract.methods.set(5).send({ from: accounts[0] });
+
+     // Get the value from the contract to prove it worked.
+    const response = await contract.methods.get().call();
+
+    // Update state with the result.
+    this.setState({ storageValue: response }); */
+
+    await contract.methods.setBooksCount().send({ from: accounts[0] });
+
+    //const response2 = await contract.methods.setBooksCount().call();
+    const response = await contract.methods.getBooksCount().call();
+    
+    this.setState({ booksCount: response });
   };
 
   //Function to receive a file (pdf) from a user that we upload to IPFS
@@ -341,7 +428,7 @@ class App extends Component {
           <tbody>
           <tr>
             <td>1</td>
-            <td>Harry Potter and the Philosopher's Stone</td>
+            <td>{this.state.booksCount} Harry Potter and the Philosopher's Stone</td>
             <td>
               <Button color="info" size="sm" onClick={this.toggleDescriptionModal.bind(this)}
               >Description</Button></td>

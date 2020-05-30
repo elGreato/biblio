@@ -5,7 +5,7 @@ contract LibraryContract {
     string public contractName;
 
     //use this not to point at empty mapping
-    uint256 public booksCount = 0;
+    uint256 public booksCount = 1337;
 
     //similar to linkedList
     mapping(uint256 => Book) public books;
@@ -61,7 +61,7 @@ contract LibraryContract {
         require(bytes(_bookTitle).length > 0, "Book Title is not valid!");
         require(_bookPrice > 0, "Book price is not valid!");
 
-        booksCount++;
+        setBooksCount();
 
         //create the Book
         books[booksCount] = Book(booksCount,
@@ -121,6 +121,13 @@ contract LibraryContract {
     }
 
 
+    function getBooksCount() public view returns (uint256) {
+        return booksCount;
+    }
 
+    function setBooksCount() public {
+        booksCount = 1;
+        //
+    }
 
 }
