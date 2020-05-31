@@ -209,6 +209,9 @@ class App extends Component {
                     {book.bookLocation}
                   </td>
                   <td>
+                    {book.owner}
+                  </td>
+                  <td>
                     {book.bookPrice}
                   </td>
                   <td>
