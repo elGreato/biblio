@@ -87,33 +87,7 @@ class App extends Component {
 
   //TODO Web3 of Quorum https://github.com/jpmorganchase/quorum.js/
 
-
-
-  render3() {
-    if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
-    return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.booksCount}</div>
-      </div>
-    );
-  }
-
-
   runExample = async () => {
-    const { accounts, contract } = this.state;
-
     /*
         // Stores a given value, 5 by default.
         await contract.methods.set(5).send({ from: accounts[0] });
@@ -127,15 +101,17 @@ class App extends Component {
     //await contract.methods.setBooksCount().send({ from: accounts[0] });
 
     //const response2 = await contract.methods.setBooksCount().call();
-    const response = await contract.methods.getBooksCount().call();
+
+    const response = await this.state.contract.methods.getBooksCount().call();
 
     for (var i = 1; i <= response; i++) {
-      const book = await contract.methods.books(i).call()
+      const book = await this.state.contract.methods.books(i).call()
       this.setState({
         books: [...this.state.books, book]
       })
-      console.log(book)
     }
+
+    console.log(this.state.books[1])
 
     this.setState({ booksCount: response });
   };
@@ -169,40 +145,40 @@ class App extends Component {
   //   })  
   // }
 
-/*   toggleNewBookModal() {
-    this.setState({
-      newBookModal: !this.state.newBookModal
-    });
-  }
-  toggleBuyBookModal() {
-    this.setState({
-      buyBookModal: !this.state.buyBookModal
-    });
-  }
-  toggleDescriptionModal() {
-    this.setState({
-      descriptionModal: !this.state.descriptionModal
-    });
-  }
+  /*   toggleNewBookModal() {
+      this.setState({
+        newBookModal: !this.state.newBookModal
+      });
+    }
+    toggleBuyBookModal() {
+      this.setState({
+        buyBookModal: !this.state.buyBookModal
+      });
+    }
+    toggleDescriptionModal() {
+      this.setState({
+        descriptionModal: !this.state.descriptionModal
+      });
+    }
+  
+    addBook(e) {
+  
+      alert('The value is: ' + this.bookTitle.value);
+      /*    alert('The value is: ' + this.bookDescription.value);
+          alert('The value is: ' + this.bookType.value);
+          alert('The value is: ' + this.bookPrice.value); */
 
-  addBook(e) {
-
-    alert('The value is: ' + this.bookTitle.value);
-    /*    alert('The value is: ' + this.bookDescription.value);
-        alert('The value is: ' + this.bookType.value);
-        alert('The value is: ' + this.bookPrice.value); */
-
-    //   this.createBookBlockchain();
-    //    this.state.instance.method.createBook(this.bookType.value, this.bookTitle.value, this.bookDescription.value, "123", this.bookPrice.value).send({ from: this.accounts[0] });
+  //   this.createBookBlockchain();
+  //    this.state.instance.method.createBook(this.bookType.value, this.bookTitle.value, this.bookDescription.value, "123", this.bookPrice.value).send({ from: this.accounts[0] });
 
 
-/*  }
-
-   buyBook(id, title, rating) {
-    this.setState({
-      buyBookData: { id, title, rating }, buyBookModal: !this.state.buyBookModal
-    });
-  } */ //guess ipfs source should be added instead of http://localhost:3000/books
+  /*  }
+  
+     buyBook(id, title, rating) {
+      this.setState({
+        buyBookData: { id, title, rating }, buyBookModal: !this.state.buyBookModal
+      });
+    } */ //guess ipfs source should be added instead of http://localhost:3000/books
 
 
   //Render shows the content of the page
@@ -215,7 +191,6 @@ class App extends Component {
       <div className="App container">
         <h1>Books App</h1>
 
-        {this.state.accounts}
         <form onSubmit={(event) => {
           event.preventDefault()
           const type = this.bookType.value
@@ -231,37 +206,71 @@ class App extends Component {
               ref={(input) => { this.bookType = input }}
               className="form-control"
               placeholder="Book Type"
-              required /></div><div>
+              required />
+          </div>
+          <div>
             <input
               id="bookTitle"
               type="text"
               ref={(input) => { this.bookTitle = input }}
               className="form-control"
               placeholder="Book Title"
-              required /></div><div>
+              required />
+          </div>
+          <div>
             <input
               id="bookDescription"
               type="text"
               ref={(input) => { this.bookDescription = input }}
               className="form-control"
               placeholder="Book Description"
-              required /></div><div>
+              required />
+          </div>
+          <div>
             <input
               id="bookLocation"
               type="text"
               ref={(input) => { this.bookLocation = input }}
               className="form-control"
               placeholder="Book Location"
-              required /></div><div>
+              required />
+          </div>
+          <div>
             <input
               id="bookPrice"
               type="text"
               ref={(input) => { this.bookPrice = input }}
               className="form-control"
               placeholder="Book Price"
-              required /></div>
+              required />
+          </div>
           <button type="submit" className="btn btn-primary">Add Book</button>
         </form>
+
+        <table>
+          {this.state.books.map((book, key) => {
+            return (
+              <tr key={key}>
+                <td>
+                  {book.bookType}
+                </td>
+                <td>
+                  {book.bookTitle}
+                </td>
+                <td>
+                  {book.bookDescription}
+                </td>
+                <td>
+                  {book.bookLocation}
+                </td>
+                <td>
+                  {book.bookPrice}
+                </td>
+              </tr>
+
+            )
+          })}
+        </table>
       </div>
     );
   }
