@@ -13,21 +13,22 @@ import { Input, FormGroup, Form, Label, Modal, ModalHeader, ModalBody, ModalFoot
 // const ipfsClient = require('ipfs-http-client')
 // const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 
-
 class App extends Component {
-  state = { accounts: null, booksCount: null, books: [], loading: true, buffer: null, web3: null, contract: null, value: null, bookTitle: null };
+  state = {
+    accounts: null,
+    booksCount: null,
+    books: [],
+    loading: true,
+    buffer: null,
+    web3: null,
+    contract: null,
+    value: null,
+    bookTitle: null
+  };
 
   constructor(props) {
     super(props)
-    /*     this.state = {
-          account: '',
-          booksCount: 0,
-          books: [],
-          loading: true,
-          buffer: null,
-          web3: null,
-          contract: null
-        } */
+
 
     this.createBook = this.createBook.bind(this)
     this.purchaseBook = this.purchaseBook.bind(this)
@@ -42,7 +43,7 @@ class App extends Component {
           this.setState({ loading: false })
         }) */
   }
-  
+
   purchaseBook(bookId, bookPrice) {
     //   this.setState({ loading: true })
     this.state.contract.methods.purchaseBook(bookId).send({ from: this.state.accounts[0], value: bookPrice })
@@ -73,7 +74,7 @@ class App extends Component {
       );
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ web3, accounts, contract: instance }, this.loadBooks);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -83,25 +84,9 @@ class App extends Component {
     }
   };
 
-  //TODO: Web3 of Besu (if any)
-
   //TODO Web3 of Quorum https://github.com/jpmorganchase/quorum.js/
 
-  runExample = async () => {
-    /*
-        // Stores a given value, 5 by default.
-        await contract.methods.set(5).send({ from: accounts[0] });
-    
-         // Get the value from the contract to prove it worked.
-        const response = await contract.methods.get().call();
-    
-        // Update state with the result.
-        this.setState({ storageValue: response }); */
-
-    //await contract.methods.setBooksCount().send({ from: accounts[0] });
-
-    //const response2 = await contract.methods.setBooksCount().call();
-
+  loadBooks = async () => {
     const response = await this.state.contract.methods.getBooksCount().call();
 
     for (var i = 1; i <= response; i++) {
@@ -110,8 +95,6 @@ class App extends Component {
         books: [...this.state.books, book]
       })
     }
-
-    console.log(this.state.books[1])
 
     this.setState({ booksCount: response });
   };
@@ -130,56 +113,6 @@ class App extends Component {
     }
     //  let result =  ipfs(file) //what comes out here?
   }
-  // onSubmit = (event) => {
-  //   event.preventDefault()
-  //   console.log("Submitting file to ipfs...")
-  //   ipfs.add(this.state.buffer, (error,result) => {
-  //     console.log('Ipfs result', reslt)
-  //     if(error) {
-  //       HTMLFormControlsCollection.error(error)
-  //       return
-  //     }
-  //     this.state.contract.methods.set(result[0].hash).send({ from: this.state.account }).then((r) => {
-  //       return this.setState({ simplestorageHash: result[0].hash })
-  //     })
-  //   })  
-  // }
-
-  /*   toggleNewBookModal() {
-      this.setState({
-        newBookModal: !this.state.newBookModal
-      });
-    }
-    toggleBuyBookModal() {
-      this.setState({
-        buyBookModal: !this.state.buyBookModal
-      });
-    }
-    toggleDescriptionModal() {
-      this.setState({
-        descriptionModal: !this.state.descriptionModal
-      });
-    }
-  
-    addBook(e) {
-  
-      alert('The value is: ' + this.bookTitle.value);
-      /*    alert('The value is: ' + this.bookDescription.value);
-          alert('The value is: ' + this.bookType.value);
-          alert('The value is: ' + this.bookPrice.value); */
-
-  //   this.createBookBlockchain();
-  //    this.state.instance.method.createBook(this.bookType.value, this.bookTitle.value, this.bookDescription.value, "123", this.bookPrice.value).send({ from: this.accounts[0] });
-
-
-  /*  }
-  
-     buyBook(id, title, rating) {
-      this.setState({
-        buyBookData: { id, title, rating }, buyBookModal: !this.state.buyBookModal
-      });
-    } */ //guess ipfs source should be added instead of http://localhost:3000/books
-
 
   //Render shows the content of the page
 
