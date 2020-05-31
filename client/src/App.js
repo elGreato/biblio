@@ -30,7 +30,7 @@ class App extends Component {
         } */
 
     this.createBook = this.createBook.bind(this)
-    // this.purchaseBook = this.purchaseBook.bind(this)
+    this.purchaseBook = this.purchaseBook.bind(this)
   }
 
 
@@ -42,14 +42,14 @@ class App extends Component {
           this.setState({ loading: false })
         }) */
   }
-
-  // purchaseBook(bookID, bookPrice) {
-  //   this.setState({ loading: true })
-  //   this.state.librarycontract.methods.purchaseBook(id).send({ from: this.state.account, value: bookPrice })
-  //   .once('receipt', (receipt) => {
-  //     this.setState({ loading: false })
-  //   })
-  // }
+  
+  purchaseBook(bookId, bookPrice) {
+    //   this.setState({ loading: true })
+    this.state.contract.methods.purchaseBook(bookId).send({ from: this.state.accounts[0], value: bookPrice })
+    //   .once('receipt', (receipt) => {
+    //     this.setState({ loading: false })
+    //   })
+  }
 
 
   componentDidMount = async () => {
@@ -191,6 +191,43 @@ class App extends Component {
       <div className="App container">
         <h1>Books App</h1>
 
+        <table className="table">
+          <tbody id="bookList">
+            {this.state.books.map((book, key) => {
+              return (
+                <tr key={key}>
+                  <td>
+                    {book.bookType}
+                  </td>
+                  <td>
+                    {book.bookTitle}
+                  </td>
+                  <td>
+                    {book.bookDescription}
+                  </td>
+                  <td>
+                    {book.bookLocation}
+                  </td>
+                  <td>
+                    {book.bookPrice}
+                  </td>
+                  <td>
+                    <button className="btn btn-primary"
+                      name={book.bookId}
+                      value={book.bookPrice}
+                      onClick={(event) => {
+                        this.purchaseBook(event.target.name, event.target.value)
+                      }
+                      }
+                    >Buy</button>
+                  </td>
+                </tr>
+
+              )
+            })}
+          </tbody>
+        </table>
+
         <form onSubmit={(event) => {
           event.preventDefault()
           const type = this.bookType.value
@@ -246,31 +283,6 @@ class App extends Component {
           </div>
           <button type="submit" className="btn btn-primary">Add Book</button>
         </form>
-
-        <table>
-          {this.state.books.map((book, key) => {
-            return (
-              <tr key={key}>
-                <td>
-                  {book.bookType}
-                </td>
-                <td>
-                  {book.bookTitle}
-                </td>
-                <td>
-                  {book.bookDescription}
-                </td>
-                <td>
-                  {book.bookLocation}
-                </td>
-                <td>
-                  {book.bookPrice}
-                </td>
-              </tr>
-
-            )
-          })}
-        </table>
       </div>
     );
   }
