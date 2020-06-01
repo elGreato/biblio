@@ -34,6 +34,23 @@ class App extends Component {
     this.purchaseBook = this.purchaseBook.bind(this)
   }
 
+  toggleNewBookModal() {
+    this.setState({
+      newBookModal: !this.state.newBookModal
+    });
+  }
+  toggleDescriptionModal() {
+    this.setState({
+      descriptionModal: !this.state.descriptionModal
+    });
+  }
+  toggleDescriptionModal2(bookTitle, bookDescription) {
+    this.setState({
+      bookTitle: bookTitle,
+      bookDescription: bookDescription,
+      descriptionModal: !this.state.descriptionModal
+    });
+  }
 
   createBook(bookType, bookTitle, bookDescription, bookLocation, bookPrice) {
     //this.setState({ loading: true })
@@ -124,28 +141,148 @@ class App extends Component {
       <div className="App container">
         <h1>Books App</h1>
 
-        <table className="table">
+        <Button className="my-3" color="primary" onClick={this.toggleNewBookModal.bind(this)}>Add Book</Button>
+        <Modal isOpen={this.state.newBookModal} toggle={this.toggleNewBookModal.bind(this)}>
+          <ModalHeader toggle={this.toggleNewBookModal.bind(this)}>Add a new book</ModalHeader>
+
+          <form onSubmit={(event) => {
+            event.preventDefault()
+            const type = this.bookType.value
+            const title = this.bookTitle.value
+            const description = this.bookDescription.value
+            const location = this.bookLocation.value
+            const price = this.bookPrice.value
+            this.createBook(type, title, description, location, price)
+          }}>
+            <ModalBody>
+              <FormGroup>
+                <Label for="bookTitle">Book Title</Label>
+                <div>
+                  <input
+                    id="bookTitle"
+                    type="text"
+                    ref={(input) => { this.bookTitle = input }}
+                    className="form-control"
+                    placeholder=""
+                    required />
+                </div>
+              </FormGroup>
+
+              <FormGroup>
+                <Label for="bookType">Book Type</Label>
+                <div>
+                  <select
+                    id="bookType"
+                    type="text"
+                    ref={(input) => { this.bookType = input }}
+                    className="form-control"
+                    placeholder=""
+                    required>
+                    <option disabled selected value>Please select</option>
+                    <option value="1">Technical</option>
+                    <option value="2">Manual</option>
+                    <option value="3">OTHERS</option>
+                  </select>
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <Label for="bookDescription">Book Description</Label>
+                <div>
+                  <textarea
+                    id="bookDescription"
+                    type="text"
+                    ref={(input) => { this.bookDescription = input }}
+                    className="form-control"
+                    placeholder=""
+                    required />
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <Label for="bookPrice">Book Price (in Ether)</Label>
+                <div>
+                  <input
+                    id="bookPrice"
+                    type="text"
+                    ref={(input) => { this.bookPrice = input }}
+                    className="form-control"
+                    placeholder=""
+                    required />
+                </div>
+              </FormGroup>
+
+              <FormGroup>
+                <Label for="bookLocation">Book Location</Label>
+                <div>
+                  <input
+                    id="bookLocation"
+                    type="file"
+                    ref={(input) => { this.bookLocation = input }}
+
+
+                    required />
+                </div>
+              </FormGroup>
+
+              <button type="submit" className="btn btn-primary">Add Book</button>
+            </ModalBody>
+          </form>
+        </Modal>
+
+        <Modal isOpen={this.state.descriptionModal} toggle={this.toggleDescriptionModal.bind(this)}>
+          <ModalHeader toggle={this.toggleDescriptionModal.bind(this)}>{this.state.bookTitle}</ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <FormText>
+                {this.state.bookDescription}
+              </FormText>
+            </FormGroup>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button color="secondary" onClick={this.toggleDescriptionModal.bind(this)}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
+
+
+
+        <Table className="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Owner</th>
+              <th scope="col">Book Title</th>
+              <th scope="col"></th>
+              <th scope="col">Type</th>
+              <th scope="col">Price (in Ether)</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
           <tbody id="bookList">
             {this.state.books.map((book, key) => {
               return (
                 <tr key={key}>
                   <td>
-                    {book.bookType}
-                  </td>
-                  <td>
-                    {book.bookTitle}
-                  </td>
-                  <td>
-                    {book.bookDescription}
-                  </td>
-                  <td>
-                    {book.bookLocation}
+                    {book.bookId}
                   </td>
                   <td>
                     {book.owner}
                   </td>
                   <td>
+                    {book.bookTitle}
+                  </td>
+                  <td>
+                    <Button color="info" size="sm" name={book.bookTitle} value={book.bookDescribtion} onClick={(event) => { this.toggleDescriptionModal2(event.target.name, event.target.value) }}
+                    >Description</Button>
+
+                  </td>
+                  <td>
+                    {book.bookType}
+                  </td>
+                  <td>
                     {book.bookPrice}
+                  </td>
+                  <td>
+                    {book.bookLocation}
                   </td>
                   <td>
                     <button className="btn btn-primary"
@@ -162,63 +299,8 @@ class App extends Component {
               )
             })}
           </tbody>
-        </table>
+        </Table>
 
-        <form onSubmit={(event) => {
-          event.preventDefault()
-          const type = this.bookType.value
-          const title = this.bookTitle.value
-          const description = this.bookDescription.value
-          const location = this.bookLocation.value
-          const price = this.bookPrice.value
-          this.createBook(type, title, description, location, price)
-        }}><div>
-            <input
-              id="bookType"
-              type="text"
-              ref={(input) => { this.bookType = input }}
-              className="form-control"
-              placeholder="Book Type"
-              required />
-          </div>
-          <div>
-            <input
-              id="bookTitle"
-              type="text"
-              ref={(input) => { this.bookTitle = input }}
-              className="form-control"
-              placeholder="Book Title"
-              required />
-          </div>
-          <div>
-            <input
-              id="bookDescription"
-              type="text"
-              ref={(input) => { this.bookDescription = input }}
-              className="form-control"
-              placeholder="Book Description"
-              required />
-          </div>
-          <div>
-            <input
-              id="bookLocation"
-              type="text"
-              ref={(input) => { this.bookLocation = input }}
-              className="form-control"
-              placeholder="Book Location"
-              required />
-          </div>
-          <div>
-            <input
-              id="bookPrice"
-              type="text"
-              ref={(input) => { this.bookPrice = input }}
-              className="form-control"
-              placeholder="Book Price"
-              required />
-          </div>
-          <button type="submit" className="btn btn-primary">Add Book</button>
-        </form>
       </div>
     );
   }
