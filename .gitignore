@@ -23,3 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 node_modules
+client/src/contracts/SimpleStorage.json
+client/src/contracts/SimpleStorage.json
+client/src/contracts/Migrations.json
+client/src/contracts/LibraryContract.json
