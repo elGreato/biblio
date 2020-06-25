@@ -127,17 +127,24 @@ class App extends Component {
 	}
 
 	//Upload to IPFS
-	onSubmit(event) {
+	uploadBook = async event => {
 		event.preventDefault();
-		ipfs.files.add(this.state.buffer, (error, result) => {
+		const type = this.bookType.value;
+		const title = this.bookTitle.value;
+		const description = this.bookDescription.value;
+		const price = this.bookPrice.value;
+
+		await ipfs.files.add(this.state.buffer, (error, result) => {
 			if (error) {
 				console.error(error);
+				console.log('error happened here');
 				return;
 			}
 			this.setState({ loc: 'https://ipfs.infura.io/ipfs/' + result[0].hash });
 			console.log('to view the file, go to: ', this.state.loc);
+			this.createBook(type, title, description, this.state.loc, price);
 		});
-	}
+	};
 
 	//Render shows the content of the page
 	render() {
@@ -154,17 +161,7 @@ class App extends Component {
 				<Modal isOpen={this.state.newBookModal} toggle={this.toggleNewBookModal.bind(this)}>
 					<ModalHeader toggle={this.toggleNewBookModal.bind(this)}>Add a new book</ModalHeader>
 
-					<form
-						onSubmit={event => {
-							event.preventDefault();
-							const type = this.bookType.value;
-							const title = this.bookTitle.value;
-							const description = this.bookDescription.value;
-							const location = this.bookLocation.value;
-							const price = this.bookPrice.value;
-							this.createBook(type, title, description, location, price);
-						}}
-					>
+					<form onSubmit={this.uploadBook}>
 						<ModalBody>
 							<FormGroup>
 								<Label for="bookTitle">Book Title</Label>
@@ -195,7 +192,7 @@ class App extends Component {
 										placeholder=""
 										required
 									>
-										<option disabled selected value>
+										<option disabled selected>
 											Please select
 										</option>
 										<option value="1">Technical</option>
@@ -229,7 +226,6 @@ class App extends Component {
 											this.bookPrice = input;
 										}}
 										className="form-control"
-										placeholder=""
 										required
 									/>
 								</div>
@@ -238,14 +234,7 @@ class App extends Component {
 							<FormGroup>
 								<Label for="bookLocation">Book Location</Label>
 								<div>
-									<input
-										id="bookLocation"
-										type="file"
-										ref={input => {
-											this.bookLocation = input;
-										}}
-										required
-									/>
+									<input id="bookLocation" type="file" onChange={this.handleFileChange} required />
 								</div>
 							</FormGroup>
 
