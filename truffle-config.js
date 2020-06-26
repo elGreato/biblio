@@ -10,6 +10,14 @@ module.exports = {
       port: 7545,
       gas: 4612388, // Gas limit used for deploys
       network_id: '*', // Match any network id
+    },
+    quorum:{
+      host: '127.0.0.1', 
+      port: 22000,
+      network_id: "*",
+      gas:0,
+      gasPrice:0,
+      type: "quorum"
     }
   }
 };

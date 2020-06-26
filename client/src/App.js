@@ -34,6 +34,7 @@ class App extends Component {
 
 		this.createBook = this.createBook.bind(this);
 		this.purchaseBook = this.purchaseBook.bind(this);
+		this.loadBooks = this.loadBooks.bind(this)
 	}
 
 	componentDidMount = async () => {
@@ -50,9 +51,14 @@ class App extends Component {
 			const deployedNetwork = LibraryContract.networks[networkId];
 			const instance = new web3.eth.Contract(LibraryContract.abi, deployedNetwork && deployedNetwork.address);
 
+			//get the book count
+			const booknum = await instance.methods.booksCount().call();
+			this.setState({ booksCount: booknum });
+
 			// Set web3, accounts, and contract to the state, and then proceed with an
 			// example of interacting with the contract's methods.
-			this.setState({ web3, accounts, contract: instance }, this.loadBooks);
+			this.setState({ web3, accounts, contract: instance });
+			this.loadBooks();
 		} catch (error) {
 			// Catch any errors for any of the above operations.
 			alert(`Failed to load web3, accounts, or contract. Check console for details.`);
@@ -60,18 +66,17 @@ class App extends Component {
 		}
 	};
 
-	//TODO Web3 of Quorum https://github.com/jpmorganchase/quorum.js/
+	
 	loadBooks = async () => {
-		const response = await this.state.contract.methods.booksCount().call();
-
-		for (var i = 1; i <= response; i++) {
+		console.log("books count", this.state.booksCount)
+		for (var i = 1; i <= this.state.booksCount; i++) {
 			const book = await this.state.contract.methods.books(i).call();
 			this.setState({
 				books: [...this.state.books, book]
 			});
 		}
 
-		this.setState({ booksCount: response });
+		
 	};
 
 	//Function to receive a file (pdf) from a user that we upload to IPFS
