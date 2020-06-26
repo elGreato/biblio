@@ -34,6 +34,7 @@ class App extends Component {
 
 		this.createBook = this.createBook.bind(this);
 		this.purchaseBook = this.purchaseBook.bind(this);
+		this.loadBooks = this.loadBooks.bind(this)
 	}
 
 	componentDidMount = async () => {
@@ -51,12 +52,13 @@ class App extends Component {
 			const instance = new web3.eth.Contract(LibraryContract.abi, deployedNetwork && deployedNetwork.address);
 
 			//get the book count
-			const booknum = instance.methods.booksCount().call();
+			const booknum = await instance.methods.booksCount().call();
 			this.setState({ booksCount: booknum });
 
 			// Set web3, accounts, and contract to the state, and then proceed with an
 			// example of interacting with the contract's methods.
-			this.setState({ web3, accounts, contract: instance }, this.loadBooks);
+			this.setState({ web3, accounts, contract: instance });
+			this.loadBooks();
 		} catch (error) {
 			// Catch any errors for any of the above operations.
 			alert(`Failed to load web3, accounts, or contract. Check console for details.`);
@@ -64,9 +66,9 @@ class App extends Component {
 		}
 	};
 
-	//TODO Web3 of Quorum https://github.com/jpmorganchase/quorum.js/
+	
 	loadBooks = async () => {
-
+		console.log("books count", this.state.booksCount)
 		for (var i = 1; i <= this.state.booksCount; i++) {
 			const book = await this.state.contract.methods.books(i).call();
 			this.setState({
