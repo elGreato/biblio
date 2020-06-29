@@ -66,7 +66,6 @@ class App extends Component {
 		}
 	};
 
-	
 	loadBooks = async () => {
 		console.log("books count", this.state.booksCount)
 		for (var i = 1; i <= this.state.booksCount; i++) {
@@ -76,8 +75,16 @@ class App extends Component {
 			});
 		}
 
-		
 	};
+
+	getLocation(owner, location) {
+		console.log(location);
+		if (this.state.accounts[0] == owner) {
+			return location;
+		} else {
+			return "You need to buy the book first!";
+		}
+	}
 
 	//Function to receive a file (pdf) from a user that we upload to IPFS
 
@@ -299,7 +306,7 @@ class App extends Component {
 									</td>
 									<td>{book.bookType}</td>
 									<td>{book.bookPrice}</td>
-									<td>{book.bookLocation}</td>
+									<td>{this.getLocation(book.owner, book.bookLocation)}</td>
 									<td>
 										<button
 											className="btn btn-primary"
